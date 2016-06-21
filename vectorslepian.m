@@ -198,10 +198,12 @@ elseif strcmp(Lmax,'demo1')
         plot(XY(:,1),XY(:,2),'k')
         axis equal
         axis image
-        set(ah(index),'FontS',fozo-2)
+        set(ah(index),'FontSize',fozo-2)
         % Writing out the eigenvalues
-        boxtex('ll',ah(index),sprintf('%s = %1.6f','\lambda',...
-            V(index)),fozo);   
+        if ~exist('octave_config_info')
+            boxtex('ll',ah(index),sprintf('%s = %1.6f','\lambda',...
+                V(index)),fozo);   
+        end
         hold off
         set(ah(index),'xgrid','off','ygrid','off')
         set(gca,'box','on')
@@ -219,8 +221,8 @@ elseif strcmp(Lmax,'demo1')
     serre(ha(9:12),[],'down')
     longticks(ah)
   
-    set(ah,'xtick',[100:20:160],'xtickl',[100:20:160],...
-         'ytick',[-50:15:0],'ytickl',[-50:15:0])
+    set(ah,'xtick',[100:20:160],'xticklabel',[100:20:160],...
+         'ytick',[-50:15:0],'yticklabel',[-50:15:0])
     nolabels(ah(1:9),1); nolabels(ha(5:12),2); deggies(ah)
      
     
