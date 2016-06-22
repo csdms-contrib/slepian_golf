@@ -2,7 +2,7 @@ function varargout=blmclm(l,m,theta,phi,check,tol,blox,irr)
 % [B,C,theta,phi,dems,dels]=blmclm(l,m,theta,phi,check,tol,blox,irr)
 %
 % Calculates unit-normalized real vector spherical harmonics Blm, 
-% DT (B.159). 
+% DT (B.159). Also works for irregularly spaced lon/lat points.
 %
 % INPUT:
 % 

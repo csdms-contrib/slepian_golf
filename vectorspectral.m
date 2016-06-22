@@ -125,7 +125,9 @@ elseif strcmp(L,'demo1')
         imagefnan([-Llim,0],[Llim,Llim],coeffmatrix,[],[],[],1,100);
         hold on
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-        boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);   
+	if ~exist('octave_config_info')
+          boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
+	end
         hold off
     end
     serre(ah(1:3),2/3,'across')
@@ -159,8 +161,10 @@ elseif strcmp(L,'demo2')
         xlabel('m')
         ylabel('L')
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-        boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);   
-        hold off
+	if ~exist('octave_config_info')
+          boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
+	end
+	hold off
         % Plot clm coefficients 
         axes(bh(index))
         imagefnan([-Llim,0],[Llim,Llim],coeffmatrix{2},[],[],[],1,100);
@@ -168,7 +172,9 @@ elseif strcmp(L,'demo2')
         xlabel('m')
         ylabel('L')
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-        boxtex('ll',bh(index),sprintf('%s =%1.3f','\lambda',V(index)),5);   
+	if ~exist('octave_config_info')
+          boxtex('ll',bh(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
+	end
         hold off
     end
     
@@ -218,8 +224,10 @@ elseif strcmp(L,'demo3')
     hold on    
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
-    boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),12); 
-    boxtex('ll',ah(4),sprintf('%s =%1.3f','\lambda',V(index)),12);  
+    if ~exist('octave_config_info')
+      boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),12); 
+      boxtex('ll',ah(4),sprintf('%s =%1.3f','\lambda',V(index)),12);
+    end
     
     serre(ha(1:2),3/2,'down')
     serre(ha(3:4),3/2,'down')      
@@ -299,9 +307,11 @@ elseif strcmp(L,'demo4')
     hold on    
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
-    boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),7); 
-    boxtex('ll',ah(5),sprintf('%s =%1.3f','\lambda',V(index)),7);      
-    boxtex('ll',ah(6),sprintf('%s =%1.3f','\lambda',V(index)),7);      
+    if ~exist('octave_config_info')
+      boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),7); 
+      boxtex('ll',ah(5),sprintf('%s =%1.3f','\lambda',V(index)),7);      
+      boxtex('ll',ah(6),sprintf('%s =%1.3f','\lambda',V(index)),7);
+    end
     serre(ha(1:2),4.5/2,'down')
     serre(ha(3:4),4.5/2,'down')  
     serre(ha(5:6),4.5/2,'down')
@@ -448,7 +458,7 @@ elseif strcmp(L,'demo5')
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
     xlabel('order m','FontSize',fs)  
-
+    if ~exist('octave_config_info')
     [bhan, thhan]=boxtex('ll',ha(2),sprintf('%s','{V}_{lm} '),fs-2,[],1.2); 
     delete(bhan)
     [bhan, thhan]=boxtex('ll',ha(3),sprintf('%s','{W}_{lm} '),fs-2,[],1.2); 
@@ -459,12 +469,13 @@ elseif strcmp(L,'demo5')
     [bhan, thhan]=boxtex('ll',ha(6),sprintf('%s','{W\prime}_{lm} '),...
         fs-2,[],1.2);  
     delete(bhan)
+    end
     longticks(ha(6))
-    
-    boxtex('lr',ha(1),sprintf('%s =%1.3f','\lambda',V(index)),fs); 
-    boxtex('lr',ha(5),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
-    boxtex('lr',ha(6),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
-    
+    if ~exist('octave_config_info')
+      boxtex('lr',ha(1),sprintf('%s =%1.3f','\lambda',V(index)),fs); 
+      boxtex('lr',ha(5),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
+      boxtex('lr',ha(6),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
+    end
     set([ah(1:2)],'xtick',[270:90:540],'xtickl',[270 0 90 180],...
 	 'ytick',[-90:45:90],'ytickl',[-90:45:90])
     set([ah(3:6)],'xtick',[-40:20:40],'xtickl',[-40:20:40],...
@@ -588,6 +599,7 @@ elseif strcmp(L,'demo6')
     hold off  
     xlabel('order m','FontSize',fs)
     longticks(ah(4))
+    if ~exist('octave_config_info')
     [bhan, thhan]=boxtex('ll',ha(2),sprintf('%s','{U}_{lm} '),fs-2,[],1.2); 
     delete(bhan)   
     [bhan, thhan]=boxtex('ll',ha(4),sprintf('%s','{U\prime}_{lm} '),...
@@ -596,7 +608,7 @@ elseif strcmp(L,'demo6')
     
     boxtex('lr',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),fs); 
     boxtex('lr',ah(4),sprintf('%s =%1.3f','\lambda',V(index)),fs);     
-      
+    end
     serre(ha(1:2),3/2,'down')
     serre(ha(3:4),3/2,'down')  
     set([ah(1:2)],'xtick',[270:90:540],'xtickl',[270 0 90 180],...
