@@ -1,7 +1,7 @@
 function varargout=gradvecglmalpha(TH,L,srt)
 % [G,V]=gradvecglmalpha(TH,Lmax,srt)
 % 
-% Construction of gradient vector Slepian functions
+% Construction of internal-field gradient vector Slepian functions
 %
 % INPUT:
 %
