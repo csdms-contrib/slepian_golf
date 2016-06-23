@@ -178,7 +178,7 @@ else
         try
             matlabpool open
         catch
-            error('Type "matlabpool close" or run KERNELB instead')
+            warning('Type "matlabpool close" or run KERNELB instead')
         end
         
         intv=cos([thS thN]);
