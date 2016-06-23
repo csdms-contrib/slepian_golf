@@ -1,5 +1,5 @@
-function varargout=torgradvecglmalpha(TH,L,srt)
-% [G,V]=torgradvecglmalpha(TH,L)
+function varargout=torvecglmalpha(TH,L,srt)
+% [G,V]=torvecglmalpha(TH,L)
 %
 % Construction of toroidal Slepian functions from the Clm
 %
@@ -15,7 +15,7 @@ function varargout=torgradvecglmalpha(TH,L,srt)
 %       of the Clm
 % V     concentration values
 %
-% Last modified by plattner-at-alumni.ethz.ch, 02/26/2015
+% Last modified by plattner-at-alumni.ethz.ch, 06/23/2016
 
 defval('srt',1)
 
@@ -34,11 +34,11 @@ end
 % First check if already calculated. Make the name:
 if ~isstr(TH) && length(TH)==1 % POLAR CAPS  
     if lp
-      fname=fullfile(getenv('IFILES'),'TORGRADVECGLMALPHA',...
-		     sprintf('torgradvecglmalpha-%g-%i.mat',TH,L));
+      fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
+		     sprintf('torvecglmalpha-%g-%i.mat',TH,L));
     elseif bp
-      fname=fullfile(getenv('IFILES'),'TORGRADVECGLMALPHA',...
-		     sprintf('torgradvecglmalphabl-%g-%i-%i.mat',TH,L(1),L(2)));
+      fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
+		     sprintf('torvecglmalphabl-%g-%i-%i.mat',TH,L(1),L(2)));
     else
       error('The degree range is either one or two numbers')       
     end
@@ -51,11 +51,11 @@ else % GEOGRAPHICAL REGIONS and XY REGIONS
       h=hash(TH,'sha1');
     end
     if lp
-      fname=fullfile(getenv('IFILES'),'TORGRADVECGLMALPHA',...
-		     sprintf('torgradvecglmalpha-%s-%i.mat',h,L));
+      fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
+		     sprintf('torvecglmalpha-%s-%i.mat',h,L));
     elseif bp
-      fname=fullfile(getenv('IFILES'),'TORGRADVECGLMALPHA',...
-		     sprintf('torgradvecglmalphabl-%s-%i-%i.mat',h,L(1),L(2)));
+      fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
+		     sprintf('torvecglmalphabl-%s-%i-%i.mat',h,L(1),L(2)));
     else
      error('The degree range is either one or two numbers')       
     end  

@@ -1,8 +1,8 @@
-function varargout=torgradvecglmalphatoJ(TH,L,phi,theta,omega,J)
-% [Grot,V]=torgradvecglmalphatoJ(TH,L,phi,theta,omega,J)
+function varargout=torvecglmalphatoJ(TH,L,phi,theta,omega,J)
+% [Grot,V]=torvecglmalphatoJ(TH,L,phi,theta,omega,J)
 %
 % Toroidal vector Slepian function spherical cap rotation:
-% Loads torgradvecglmalpha and rotates the first J Slepian functions only
+% Loads torvecglmalpha and rotates the first J Slepian functions only
 %
 % INPUT:
 %
@@ -18,7 +18,7 @@ function varargout=torgradvecglmalphatoJ(TH,L,phi,theta,omega,J)
 % Grot     The unitary matrix of localization coefficients
 % V        The eigenvalues 
 %
-% Last modified by plattner-at-alumni.ethz.ch, 02/26/2015
+% Last modified by plattner-at-alumni.ethz.ch, 06/23/2016
 
 toout=1; % Should the result be in addmout?
 
@@ -26,8 +26,8 @@ defval('phi',0);
 defval('theta',0);
 defval('omega',0);
 
-fname=fullfile(getenv('IFILES'),'TORGRADVECGLMALPHATOJ',...
-         sprintf('torgradvecglmalphauptoJp-%g-%i-%g-%g-%g-%i.mat',...
+fname=fullfile(getenv('IFILES'),'TORVECGLMALPHATOJ',...
+         sprintf('torvecglmalphauptoJp-%g-%i-%g-%g-%g-%i.mat',...
              TH,L,phi,theta,omega,J));
 
 if exist(fname,'file')==2 
@@ -36,7 +36,7 @@ if exist(fname,'file')==2
 else             
     % Maybe this can be sped up by using the individual m blocks and not one
     % big matrix
-    [H,S]=torgradvecglmalpha(TH,L);
+    [H,S]=torvecglmalpha(TH,L);
     % H Should already be sparse but just to make sure:
     H=sparse(H);
     Hrot=sparse((L+1)^2-1,J);
