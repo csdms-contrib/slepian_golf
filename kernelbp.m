@@ -380,13 +380,13 @@ else
       D(1,:)=zeros(1,size(D,2));
       if nargout<4              
           % Rotate the kernels, properly. Why the transposed for D?                                       
-          [B,B1]=klmlmp2rotp(B,lonc,latc);
-          [D,D1]=klmlmp2rotp(D',lonc,latc);          
+          [B,B1]=klmlmp2rot(B,lonc,latc);
+          [D,D1]=klmlmp2rot(D',lonc,latc);          
           Kp=0;
       else
           % Some extra verification in here
-          [B,B1,Bp]=klmlmp2rotp(B,lonc,latc);
-          [D,D1,Dp]=klmlmp2rotp(D',lonc,latc);
+          [B,B1,Bp]=klmlmp2rot(B,lonc,latc);
+          [D,D1,Dp]=klmlmp2rot(D',lonc,latc);
           Bp=Bp(2:end,2:end);
           Dp=Dp(2:end,2:end);
           Kp=[Bp Dp;Dp' Bp];
