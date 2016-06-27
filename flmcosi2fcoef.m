@@ -20,7 +20,9 @@ function fcoef=flmcosi2fcoef(flmcosi,onorout)
 % See also  fcoef2flmcosi, coef2lmcosi, lmcosi2coef, 
 %           coef2blmclm, blmclm2coef
 %
-% Last modified by plattner-at-alumni.ethz.ch, 2/25/2015
+% Last modified by plattner-at-alumni.ethz.ch, 6/27/2016
+
+defval('onorout',0)
 
 fcoef=lmcosi2coef([0 0 0 0;flmcosi],onorout);
 
