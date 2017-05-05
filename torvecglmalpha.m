@@ -1,5 +1,5 @@
 function varargout=torvecglmalpha(TH,L,srt)
-% [G,V]=torvecglmalpha(TH,L)
+% [G,V]=torvecglmalpha(TH,L,srt)
 %
 % Construction of toroidal Slepian functions from the Clm
 %
@@ -68,7 +68,10 @@ if exist(fname,'file')==2
     load(fname)
     disp(sprintf('Loading %s',fname))
 else  
-    
+    try 
+        matlabpool open
+    end
+  
     % For GEOGRAPHICAL REGIONS or XY REGIONS
     if ischar(TH) || length(TH)>1
         if bp
