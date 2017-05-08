@@ -125,7 +125,7 @@ else
       % For now I'm using the strategy: Set up the entire max(Lin) part but
       % the first min(Lin)^2+1 entries will be zero.    
 
-      maxLin=max(Lin)
+      maxLin=max(Lin);
       
       deME=addmout(maxLin);
       deMF=addmout(Lout);
@@ -198,7 +198,7 @@ else
             [Vpp,Cp]=inoutgradvecsdwcap(TH,Lin,Lout,m);
             Vp{mm}=Vpp;
             sizE=subplus(maxLin+1-m);
-            sizF=subplus(Lout+1-max(m,1));
+            %sizF=subplus(Lout+1-max(m,1));
             CE{mm}=Cp(1:sizE,:);            
             CF{mm}=Cp(sizE+1:end,:);
     end 
