@@ -18,7 +18,7 @@ function [G,V]=vectanglmalpha(TH,L,srt)
 %       last (Lmax+1)^2-1 coefficients are for the Clm.
 % V     concentration (eigen) values
 %
-% Last modified by plattner-at-alumni.ethz.ch, 05/05/2017
+% Last modified by plattner-at-alumni.ethz.ch, 05/08/2017
 
 L=max(L);
 defval('srt',1)
@@ -67,20 +67,23 @@ else
     
     % Now the same as in inoutgradvecglmalphaup: Calculate the individual
     % solutions for the m and put them back in the right place
-    parfor mm=1:L+1         
+    %parfor mm=1:L+1  
+    for mm=1:L+1
             m=mm-1;      
-            [~,~,~,Cp1,Vpp1]=capvectorslepian(L,TH,m,[],[],[],[],[],[],0);
-            [~,~,~,Cp2,Vpp2]=capvectorslepian(L,TH,-m,[],[],[],[],[],[],0);
+            %[~,~,~,Cp1,Vpp1]=capvectorslepian(L,TH,m,[],[],[],[],[],[],0);
+            %[~,~,~,Cp2,Vpp2]=capvectorslepian(L,TH,-m,[],[],[],[],[],[],0);            
+            [Vpp1,Cp1,Vpp2,Cp2]=vectansdwcap(TH,L,m);
             %[Vpp,Cp]=inoutgradvecsdwcap(TH,Lin,Lout,m);
             Vp1{mm}=Vpp1;
             Vp2{mm}=Vpp2;
-            sizBC=max(L+1-max(m,1),zeros(size(L+1-max(m,1))));         
+            sizBC=max(L+1-max(m,1),zeros(size(L+1-max(m,1))));
             CB1{mm}=Cp1(1:sizBC,:);            
             CC1{mm}=Cp1(sizBC+1:end,:);
             CB2{mm}=Cp2(1:sizBC,:);            
             CC2{mm}=Cp2(sizBC+1:end,:);
     end 
     
+keyboard
     
     % To make distribution a bit simpler, add the L=0 row to CB and CC.
     % This is only necessary for m=0.
