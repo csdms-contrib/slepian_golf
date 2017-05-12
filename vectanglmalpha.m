@@ -18,7 +18,7 @@ function [G,V]=vectanglmalpha(TH,L,srt)
 %       last (Lmax+1)^2-1 coefficients are for the Clm.
 % V     concentration (eigen) values
 %
-% Last modified by plattner-at-alumni.ethz.ch, 05/08/2017
+% Last modified by plattner-at-alumni.ethz.ch, 05/09/2017
 
 L=max(L);
 defval('srt',1)
@@ -62,58 +62,58 @@ else
     %GC=sparse((L+1)^2,2*(L+1)^2 - 2);
     GC=sparse([],[],[],(L+1)^2,2*(L+1)^2 - 2, nelems);
 
-    V=zeros(1,2*(L+1)^2-2);
-    disp('Calculating in parallel mode')
+    V=nan(1,2*(L+1)^2-2);
+    %disp('Calculating in parallel mode')
     
     % Now the same as in inoutgradvecglmalphaup: Calculate the individual
     % solutions for the m and put them back in the right place
-    %parfor mm=1:L+1  
-    for mm=1:L+1
+    parfor mm=1:L+1  
+    %for mm=1:L+1
             m=mm-1;      
             %[~,~,~,Cp1,Vpp1]=capvectorslepian(L,TH,m,[],[],[],[],[],[],0);
             %[~,~,~,Cp2,Vpp2]=capvectorslepian(L,TH,-m,[],[],[],[],[],[],0);            
-            [Vpp1,Cp1,Vpp2,Cp2]=vectansdwcap(TH,L,m);
+            %[Vpp1,Cp1{mm},Vpp2,Cp2{mm}]=vectansdwcap(TH,L,m);
+            [Vpppos,Cppos,Vppneg,Cpneg]=vectansdwcap(TH,L,m);
             %[Vpp,Cp]=inoutgradvecsdwcap(TH,Lin,Lout,m);
-            Vp1{mm}=Vpp1;
-            Vp2{mm}=Vpp2;
+            Vppos{mm}=Vpppos;
+            Vpneg{mm}=Vppneg;
             sizBC=max(L+1-max(m,1),zeros(size(L+1-max(m,1))));
-            CB1{mm}=Cp1(1:sizBC,:);            
-            CC1{mm}=Cp1(sizBC+1:end,:);
-            CB2{mm}=Cp2(1:sizBC,:);            
-            CC2{mm}=Cp2(sizBC+1:end,:);
-    end 
-    
-keyboard
-    
+            CBpos{mm}=Cppos(1:sizBC,:);            
+            CCpos{mm}=Cppos(sizBC+1:end,:);
+            CBneg{mm}=Cpneg(1:sizBC,:);            
+            CCneg{mm}=Cpneg(sizBC+1:end,:);
+    end    
     % To make distribution a bit simpler, add the L=0 row to CB and CC.
     % This is only necessary for m=0.
-    CB1{1}=[zeros(1,size(CB1{1},2)); CB1{1}];
-    CC1{1}=[zeros(1,size(CC1{1},2)); CC1{1}];
-    CB2{1}=[zeros(1,size(CB2{1},2)); CB2{1}];
-    CC2{1}=[zeros(1,size(CC2{1},2)); CC2{1}];
-    
-    % Distribute this at the right point in the huge matrix
-    for m=0:max(L)   
+    CBpos{1}=[zeros(1,size(CBpos{1},2)); CBpos{1}];
+    CCpos{1}=[zeros(1,size(CCpos{1},2)); CCpos{1}];
+    CBneg{1}=[zeros(1,size(CBneg{1},2)); CBneg{1}];
+    CCneg{1}=[zeros(1,size(CCneg{1},2)); CCneg{1}];    
+    % Distribute this at the right point in the huge matrix   
+    for m=0:L   
+        % This is where the positive-m-blm and negative-m-clm need to
+        % get switched. 
+        % I think it is because in Plattner et al 2014 (ACHA), the
+        % D_(lm,l'm') are only non-zero when m'=-m. at the same time,
+        % B_lm,l'm=B_l-m,l'-m and C_lm,l'm=C_l-m,l'-m. So ultimately we are
+        % solving for the -m-component of Blm when we are solving for the
         if m>0
             % Here you supply the negative orders
-            GB(deM==-m,alpha(2*m):alpha(2*m+1)-1)=CB2{m+1};  
-            GC(deM==-m,alpha(2*m):alpha(2*m+1)-1)=CC2{m+1};  
-            V(alpha(2*m):alpha(2*m+1)-1)=Vp2{m+1};
-        end
-        % Duplicate for the positive order in case the region is axisymmetric
-            GB(deM==m,alpha(2*m+1):alpha(2*m+2)-1)=CB1{m+1};     
-            GC(deM==m,alpha(2*m+1):alpha(2*m+2)-1)=CC1{m+1};  
-            V(alpha(2*m+1):alpha(2*m+2)-1)=Vp1{m+1};   
-    end           
 
+        % m-component of Clm and vice-versa.
+            GB(deM==-m,alpha(2*m):alpha(2*m+1)-1)=CBneg{m+1};  
+            GC(deM==m,alpha(2*m):alpha(2*m+1)-1)=CCneg{m+1}; 
+            V(alpha(2*m):alpha(2*m+1)-1)=Vpneg{m+1};
+        end
+        % Duplicate for the positive order in case the region is axisymmetric  
+            GB(deM==m,alpha(2*m+1):alpha(2*m+2)-1)=CBpos{m+1};    
+            GC(deM==-m,alpha(2*m+1):alpha(2*m+2)-1)=CCpos{m+1};    
+            V(alpha(2*m+1):alpha(2*m+2)-1)=Vppos{m+1};             
+    end              
     GB=GB(2:end,:);
     GC=GC(2:end,:);
+    
     G=[GB;GC];
-
-    if srt
-        [V,isrt]=sort(V,'descend');           
-        G=G(:,isrt);
-    end
     
     if exist('octave_config_info')
     	% Octave
@@ -124,8 +124,13 @@ keyboard
     end
      
     
-end % end of calculation if not yet available
+end % end of calculation, if not yet available
     
+if srt
+    [V,isrt]=sort(V,'descend');           
+    G=G(:,isrt);
+end
+
 % Provide output
 varns={G,V};
 varargout=varns(1:nargout);       

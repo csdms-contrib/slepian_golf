@@ -34,7 +34,7 @@ function varargout=blmclm(l,m,theta,phi,check,tol,blox,irr)
 %           length(theta) x length(phi) x max(length(m),length(l)) 
 %        OR 
 %           (L+1)^2 x (length(theta)*length(phi)) if you put in
-%           a degree l=[0 L] and an order []: lists orders -l to l 
+%           a degree l=[1:L] and an order []: lists orders -l to l 
 %        OR
 %            max(length(m),length(l)) or (L+1)^2 x length(theta) for irr=1
 % C      The real vector spherical harmonics Clm at the desired argument(s),
@@ -60,7 +60,7 @@ defval('m',[])
 defval('theta',linspace(0,pi,181))
 defval('phi',linspace(0,2*pi,361))
 defval('check',0)
-defval('tol',1e-10)
+defval('tol',-1)
 defval('blox',0)
 defval('irr',0)
 dels=[];

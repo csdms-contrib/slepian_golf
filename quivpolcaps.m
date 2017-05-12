@@ -1,5 +1,5 @@
-function varargout=quivpolcaps(data,del,renorm)
-% [X,Y,Zx,Zy]=quivpolcaps(data,del,renorm)
+function varargout=quivpolcaps(data,del,renorm,lon,lat)
+% [X,Y,Zx,Zy]=quivpolcaps(data,del,renorm,lon,lat)
 %
 % Quiver plot for polar cap regions transforms vectors using the
 % transformation corresponding to PLOTPLM method 5 
@@ -14,6 +14,7 @@ function varargout=quivpolcaps(data,del,renorm)
 %           [default 0.05]
 % renorm    scale to maximum value (0) or multiply with the given value (if
 %           not zero)
+% lon,lat   positions, in radians
 %
 % OUTPUT:
 % 
@@ -25,7 +26,7 @@ function varargout=quivpolcaps(data,del,renorm)
 %
 % See also DSPH2DCART, CAPVECTORSLEPIAN
 %
-% Last modified by plattner-at-alumni.ethz.ch, 08/03/2012
+% Last modified by plattner-at-alumni.ethz.ch, 05/09/2017
 
 defval('lon',linspace(0,2*pi,size(data,2)));
 defval('lat',linspace(pi/2,0,floor(size(data,1)/2)));% Only takes top half

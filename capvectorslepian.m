@@ -223,6 +223,14 @@ else
         pos=pos(2:end);
     end
     if(m>0)
+        % plattner 5/9/2017:
+        % This is where the positive-m-blm and negative-m-clm need to get 
+        % switched. 
+        % I think it is because in Plattner et al 2014 (ACHA), the
+        % D_(lm,l'm') are only non-zero when m'=-m. at the same time,
+        % B_lm,l'm=B_l-m,l'-m and C_lm,l'm=C_l-m,l'-m. So ultimately we are
+        % solving for the -m-component of Blm when we are solving for the
+        % m-component of Clm and vice-versa.
         blmcosi(pos,4)=C(1:length(C)/2,index);
         clmcosi(pos,3)=C(length(C)/2+1:end,index);
     elseif(m<0)
