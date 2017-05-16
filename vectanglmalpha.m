@@ -48,7 +48,20 @@ else
 
     %% G is addmon. Need to switch it to addmout
     [~,~,~,~,~,~,~,~,rinm]=addmon(L);
-    G=G(rinm,:);
+    GB=[nan(1,2*(L+1)^2-2) ;G(1:(L+1)^2-1,:)];
+    GC=[nan(1,2*(L+1)^2-2) ;G((L+1)^2:end,:)];
+    GB=GB(rinm,:);
+    GC=GC(rinm,:);
+    clear G;
+    G=[GB(2:end,:);GC(2:end,:)];
+
+    if exist('octave_config_info')
+    	% Octave
+    	save(fname,'G','V')
+    else
+    	% Matlab
+    	save(fname,'G','V','-v7.3')
+    end
     
   else
   
