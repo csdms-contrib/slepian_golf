@@ -68,7 +68,11 @@ clear data;
 % Get the coefficients. They don't need to be sorted. 
 % We'll sort them after combining
 [Gtan,Vtan]=vectanglmalpha(dom,Lmax,1);
-[Grad,Vrad]=glmalpharing(dom,Lmax,1);
+if ischar(dom)
+  [Grad,Vrad]=glmalpha(dom,Lmax);
+else
+  [Grad,Vrad]=glmalpharing(dom,Lmax,1);
+end
 % Only keen the first J
 GradJ=Grad(:,1:Jrad);
 GtanJ=Gtan(:,1:Jtan);

@@ -23,14 +23,35 @@ function [G,V]=vectanglmalpha(TH,L,srt)
 L=max(L);
 defval('srt',1)
 
-fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
-		     sprintf('vectanglmalpha-%g-%g-%i-%i.mat',...
-             max(TH),min(TH),max(L),min(L)));         
-         
+if ischar(TH)
+  fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
+		 sprintf('vectanglmalpha-%s-%i-%i.mat',...
+			 TH,max(L),min(L)));  
+else
+  fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
+		 sprintf('vectanglmalpha-%g-%g-%i-%i.mat',...
+			 max(TH),min(TH),max(L),min(L)));         
+end
+
 if exist(fname,'file')==2
     load(fname)
     disp(sprintf('Loading %s',fname))
 else
+  if ischar(TH)
+    try
+      K=kernelbp(L,TH);
+    catch
+      K=kernelb(L,TH);
+    end      
+    [G,V]=eig(K);
+    V=diag(V);
+
+    %% G is addmon. Need to switch it to addmout
+    [~,~,~,~,~,~,~,~,rinm]=addmon(L);
+    G=G(rinm,:);
+    
+  else
+  
     % For axisymmetric regions       
   
     mvec=0:L;
@@ -122,7 +143,7 @@ else
     	% Matlab
     	save(fname,'G','V','-v7.3')
     end
-     
+  end % end of calculation for either named or ring or cap
     
 end % end of calculation, if not yet available
     
