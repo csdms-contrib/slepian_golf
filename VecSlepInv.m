@@ -147,9 +147,10 @@ varargout=varns(1:nargout);
 elseif strcmp(data,'demo1')
 
 % Let's make random Pcoef, Bcoef, Ccoef, evaluate them, and then solve    
-dom=[20,50];  % Semi opening angle of the polar cap  
+dom=[20,50];  % Semi opening angle of the polar cap
+%dom='namerica'
 Lmax=20;    % Maximum spherical-harmonic degree   
-Jfactor=2;  % How many times the Shannon number for inversion?
+Jfactor=1;%2;  % How many times the Shannon number for inversion?
 N=2000; % How many random data points?
 noiselevel=0; % Percentage of noise?
 
