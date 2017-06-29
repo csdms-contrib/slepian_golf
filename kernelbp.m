@@ -1,5 +1,5 @@
 function varargout=kernelbp(Lmax,dom,pars,method,rotb)
-% [K,B,D,XY,K1,Kp]=KERNELBP(Lmax,dom,pars,method,rotb)
+% [K,B,D,XY]=KERNELBP(Lmax,dom,pars,method,rotb)
 %  
 % Parallel version of the vector spherical harmonic localization kernel for
 % the tangential plane for a all degrees l between 0 and Lmax and for all
@@ -41,8 +41,6 @@ function varargout=kernelbp(Lmax,dom,pars,method,rotb)
 % B         The b*b=c*c part of the localization kernel 
 % D         The b*c=-c*b part of the localization kernel
 % XY        The outlines of the region into which you are localizing
-% K1        An intermediate result useful when rotb=1, see KLMLMP2ROT
-% Kp        A verification result useful when rotb=1, see KLMLMP2ROT
 %
 % EXAMPLE:
 %
@@ -72,7 +70,7 @@ function varargout=kernelbp(Lmax,dom,pars,method,rotb)
 % On 06/29/2017, plattner-at-alumni.ethz.ch made
 % Antartica rotate back by default
 %  
-% Last modified by plattner-at-alumni.ethz.ch, 10/14/2012
+% Last modified by plattner-at-alumni.ethz.ch, 06/29/2017
 % 
 % See also VECTORSLEPIAN, BLMCLM2XYZ, KERNELB, KERNELCP, KERNALTANCAPM
 
@@ -386,24 +384,18 @@ else
       B(1,:)=zeros(1,size(B,2));
       D(:,1)=zeros(size(D,1),1);
       D(1,:)=zeros(1,size(D,2));
-      if nargout<4              
-          % Rotate the kernels, properly. Why the transposed for D?                                       
-          [B,B1]=klmlmp2rot(B,lonc,latc);
-          [D,D1]=klmlmp2rot(D',lonc,latc);          
-          Kp=0;
-      else
-          % Some extra verification in here
-          [B,B1,Bp]=klmlmp2rot(B,lonc,latc);
-          [D,D1,Dp]=klmlmp2rot(D',lonc,latc);
-          Bp=Bp(2:end,2:end);
-          Dp=Dp(2:end,2:end);
-          Kp=[Bp Dp;Dp' Bp];
-      end
-      B1=B1(2:end,2:end);
-      D1=D1(2:end,2:end);
-      K1=[B1 D1;D1' B1];    
+            
+      % Rotate the kernels, properly. Why the transposed for D?                                       
+      B=klmlmp2rot(B,lonc,latc);
+      D=klmlmp2rot(D',lonc,latc);          
+
+      % For some odd reason we need to rotate them again by 0 degrees
+      % I think it has to do with some -1 factor somewhere
+      B=klmlmp2rot(B,0,0);      
+      D=klmlmp2rot(D,0,0);    
+
     else
-      [lonc,latc,K1,Kp]=deal(0);
+      [lonc,latc]=deal(0);
     end
 
     % because the vector Slepian horizontal components only start with
@@ -425,12 +417,12 @@ else
 
 
     save(fnpl,'Lmax','B','D','dom','ngl','XY',...
-         'lonc','latc','K1','Kp')
+         'lonc','latc')
  end      
     end % If loading or calculating
 end
 
-varns={K,B,D,XY,K1,Kp};
+varns={K,B,D,XY};
 varargout=varns(1:nargout);
 
  
