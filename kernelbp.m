@@ -69,6 +69,9 @@ function varargout=kernelbp(Lmax,dom,pars,method,rotb)
 % kernelbp('demo7') plot and compare Slepians for a spherical cap region
 %                   using the analytic and the numerical kernel 
 %
+% On 06/29/2017, plattner-at-alumni.ethz.ch made
+% Antartica rotate back by default
+%  
 % Last modified by plattner-at-alumni.ethz.ch, 10/14/2012
 % 
 % See also VECTORSLEPIAN, BLMCLM2XYZ, KERNELB, KERNELCP, KERNALTANCAPM
@@ -77,6 +80,11 @@ defval('Lmax',18)
 defval('dom','namerica')
 defval('method',200)
 defval('rotb',0)
+
+if strcmp(dom,'antarctica')
+  rotb = 1;
+end
+
 
 if ~isstr(Lmax)
 % Generic path name that I like
@@ -118,7 +126,7 @@ else
         if rotb==1
             disp(sprintf('Asymmetry of kernel through rotation is %g',...
                 norm(K-K')));
-            disp('Get rid of this by storing (K+K^T)/2')
+            disp('Getting rid of this by storing (K+K^T)/2')
             K=(K+K')/2;
         end
 %         % Save this now
@@ -414,6 +422,7 @@ else
     if isstr(pars)
         dom=pars;
     end
+
 
     save(fnpl,'Lmax','B','D','dom','ngl','XY',...
          'lonc','latc','K1','Kp')

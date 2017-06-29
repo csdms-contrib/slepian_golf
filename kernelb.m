@@ -53,7 +53,10 @@ function varargout=kernelb(Lmax,dom,pars,method,rotb,nstripes)
 %                  the Paul results  
 %
 % See also VECTORSLEPIAN, BLMCLM2XYZ, KERNELBP, KERNELTANCAPM
-% 
+%
+% On 06/29/2017, plattner-at-alumni.ethz.ch made
+% Antartica rotate back by default
+%  
 % Last modified by plattner-at-alumni.ethz.ch, 02/29/2012
 
 
@@ -62,6 +65,10 @@ defval('dom','namerica')
 defval('method',200)
 defval('rotb',0)
 defval('nstripes',200)
+
+if strcmp(dom,'antarctica')
+  rotb = 1;
+end
 
 if ~isstr(Lmax)
 % Generic path name that I like
@@ -635,7 +642,8 @@ else
       disp(' ')
       % Get the rotation parameters for this particular region
       [XY,lonc,latc]=eval(sprintf('%s(%i)',dom,pars));
-      % Get rid of the NaNs in the extended B and D or there
+      % Getting rid of the NaNs in the extended B and D or there
+      
       B(:,1)=zeros(size(B,1),1);
       B(1,:)=zeros(1,size(B,2));
       D(:,1)=zeros(size(D,1),1);
@@ -665,7 +673,14 @@ else
     B=B(2:end,2:end);
     D=D(2:end,2:end);
     K=[B D;D' B];
-
+    
+    if rotb==1
+      disp(sprintf('Asymmetry of kernel through rotation is %g',...
+		   norm(K-K')));
+      disp('Getting rid of this by storing (K+K^T)/2')
+      K=(K+K')/2;
+    end
+    
     % Save this now
     if isstr(pars)
         dom=pars;
@@ -731,6 +746,142 @@ elseif strcmp(Lmax,'demo2')
     plot(Egl)
     hold off
     legend('Eigenvalues Paul','Eigenvalues Gauss-Legendre')
+
+
+elseif strcmp(Lmax,'demo3')
+    % Plotting a tangential vector Slepian for Antarctica
+    % One time rotate the equatorial antarctica, other time calculate
+    % rotated kernel
+    clf;
+    fig2print(gcf,'flandscape')
+    dom='antarctica';
+    comp='tangential';
+    Lmax=5;
+    index=1%10;
+    res=[0.2 5];%[1 5]%[0.2 3];
+    range=[0 360 -90 90-sqrt(eps)];  
+    c11cmn=[range(1) range(4) range(2) range(3)];
+    [~,lonc,latc]=eval(sprintf('%s(10)',dom));   
+    [ah,ha,H]=krijetem(subnum(2,2));
+    C=[]; V=[];
+    
+    % First rotate after calculating   
+    rotb=0;
+    [~,~,~,C1,V1,blmcosi1,clmcosi1]=vectorslepian(Lmax,dom,...
+        comp,index,res,c11cmn,C,V,rotb);  
+    % Rotate
+    alp=-lonc;
+    bta=latc;
+    gam=0;
+    % The rotation routine is written for plm coefficients. We must
+    % therefore add the l=0 coeficients
+    blmcosi1=[0 0 0 0;blmcosi1];
+    clmcosi1=[0 0 0 0;clmcosi1];    
+    % Because orthogonal operations commute with the operators that define
+    % the vector spherical harmonics from the spherical harmonics, we can
+    % rotate the coefficients using the rotation for spherical harmonics
+    blmcosip=plm2rot(blmcosi1,alp,bta,gam); 
+    % And delete the l=0 coefficient again
+    blmcosip=blmcosip(2:end,:);  
+    clmcosip=plm2rot(clmcosi1,alp,bta,gam);   
+    % And delete the l=0 coefficient again also for the clm
+    clmcosip=clmcosip(2:end,:);
+    % Now calculate the data
+    [datar{1},lon{1},lat{1}]=blmclm2xyz(blmcosip,clmcosip,res(1));
+    % and on a less dense grid to show the vectors
+    absdatar=sqrt(datar{1}(:,:,1).^2+datar{1}(:,:,2).^2);
+    dmax=max(max(absdatar));
+    [datar{2},lon{2},lat{2}]=blmclm2xyz(blmcosip,clmcosip,res(2));     
+    %axes(ah(1))
+    figure
+    % Plot the absolute values
+    imagefnan([range(1) range(4)],[range(2) range(3)],absdatar,...
+        kelicol,[-dmax dmax],[],1,100);
+    hold on
+    % And the directions
+    quiverimage(datar{2},lon{2},lat{2})
+    axis off
+    plotcont;
+    text(180,100,'Rotate after solving','HorizontalAlignment','center')
+    hold off
+    % Now plot the same on a three dimensional sphere
+    %axes(ah(3))
+    figure
+    % Plot the absolute value
+    plotonearth(-absdatar)
+    kelicol(1)
+    caxis([-dmax dmax])    
+    hold on
+    % Plot a circle around the sphere such that the boundary is visible 
+    circ;
+    % Plot the directions
+    quiversphere(datar{2},[],[],[],0.01)
+    % Rotate the sphere to Antarctica
+    view(90,-90)
+    hold off
+    axis off
+
+    % Now rotate the kernel and then calculate the Slepian
+    %axes(ah(2))
+    figure
+    rotb=1;
+    % Because the same eigenvalue shows up twice (see paper), it is a
+    % coincidence, which of the two mutually pointwise perpendicular
+    % Slepian functions with the same eigenvalue shows up first. Hence it
+    % might be necessary to compare index before with index+1 or index-1
+    % here.
+    %index=index-1;
+    [data,lat,lon]=vectorslepian(Lmax,dom,comp,index,res,...
+        c11cmn,C,V,rotb);  
+    % For some reason the sign is different. This does not matter.
+    data{2}=-data{2};
+    absdata=sqrt(data{1}(:,:,1).^2+data{1}(:,:,2).^2);
+    dmax=max(max(absdata));
+    imagefnan([range(1) range(4)],[range(2) range(3)],absdata,...
+        kelicol,[-dmax dmax],[],1,100);
+    hold on
+    % Now the directions
+    quiverimage(data{2},lon{2},lat{2})
+    axis off
+    % Plot the continents too
+    plotcont;
+    text(180,100,'Rotate before solving','HorizontalAlignment','center')
+    hold off
+    % Plot the same on a three dimensional sphere      
+    %axes(ah(4))
+    figure
+    plotonearth(-absdata)
+    kelicol(1)
+    caxis([-dmax dmax]) 
+    hold on
+    % Plot a circle around the sphere such that the boundary is visible 
+    circ;
+    % Plot the directions
+    quiversphere(data{2},[],[],[],0.01)
+    % Rotate the sphere to Antarctica
+    view(90,-90)
+    hold off
+    axis off
+     
+    ## % cosmetics
+    ## serre(ah(1:2),0.75,'across')
+    ## serre(ah(3:4),0.75,'across')
+    ## serre(ha(1:2),1.25,'down')
+    ## serre(ha(3:4),1.25,'down')
+    
+    ## nrmdiff=min(sqrt(sum(sum(sum((data{1}-datar{1}).^2)))) , ...
+    ##             sqrt(sum(sum(sum((data{1}+datar{1}).^2)))) );
+    ## nrm=sqrt(sum(sum(sum((datar{1}).^2))));
+    
+    ## disp(sprintf('Relaive difference vectors = %g',...
+    ##    nrmdiff/nrm));
+   
+    ## disp(sprintf('Relaive difference abs values = %g',...
+    ##    norm(absdatar-absdata)/norm(absdatar)));
+
+    ## figdisp(comp,sprintf('%s_%i_%i_comparison',dom,Lmax,index))
+    ## disp('Use the -r600 option')
+
     
 end
 

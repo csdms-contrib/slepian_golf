@@ -15,7 +15,7 @@ function varargout=VecSlepInv(data,theta,phi,dom,Lmax,Jrad,Jtan)
 %           OR data is a vector of length 3*length(rad) as [rad;cola;lon]
 % theta     colatitude of the data points in radians 0<=cola<=pi
 % phi       longitude of the data points in radians 0<=phi<=2*pi
-% dom       Semi-opening angle of the spherical cap or two angles for ring
+% dom       Semi-opening angle of the spherical cap or two angles for ring      
 % Lmax      Maximum spherical harmonic degree
 % Jrad      How many radial Slepian functions should be used to calculate
 %           the solution? More means more sensitive to noise but higher 

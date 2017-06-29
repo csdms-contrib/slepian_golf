@@ -1,4 +1,4 @@
-function [G,V]=vectanglmalpha(TH,L,srt)
+function [G,V]=vectanglmalpha(TH,L,srt,compl)
 % [G,V]=vectanglmalpha(TH,L,srt)
 %
 % Construction of tangent vector Slepian functions from the the Blm, and Clm
@@ -6,27 +6,66 @@ function [G,V]=vectanglmalpha(TH,L,srt)
 %
 % INPUT:
 %
-% TH    polar cap opening angle(s) ( no named regions yet)
-% L     maximum spherical harmonic degree (no bandwidth at this point)
-% srt   Should the Slepian functions be sorted? [default = 1 = yes]
+% TH       polar cap opening angle
+%          OR two opening angles for ring
+%          OR named region
+%          OR, for several regions: struct with
+%             'TH.name' for name of the combined region
+%             'TH.parts' for the cell array of names of the parts, like
+%             for example TH.parts{1}='namerica', TH.parts{2}='samerica'  
+% L        maximum spherical harmonic degree (no bandwidth at this point)
+% srt      Should the Slepian functions be sorted? [default = 1 = yes]
+% compl    Do you want the complement of your named region? [default = 0 = no] 
 %
 % OUTPUT:
 %
-% G     Matrix containing the slepian coefficients for linear combinations
-%       of the Elm and Flm. The first (Lmax+1)^2 coefficients are for the
-%       Plm, the second (Lmax+1)^2-1 coefficients are for the Blm, and the
-%       last (Lmax+1)^2-1 coefficients are for the Clm.
-% V     concentration (eigen) values
+% G        Matrix containing the slepian coefficients for linear combinations
+%          of the Elm and Flm. The first (Lmax+1)^2 coefficients are for the
+%          Plm, the second (Lmax+1)^2-1 coefficients are for the Blm, and the
+%          last (Lmax+1)^2-1 coefficients are for the Clm.
+% V        concentration (eigen) values
 %
-% Last modified by plattner-at-alumni.ethz.ch, 05/09/2017
+% EXAMPLES:
+%
+% To get the Slepian functions for North and South America combined:
+%  
+% TH.name='americas'; TH.parts{1}='namerica'; TH.parts{2}='samerica';   
+% [G,V]=vectanglmalpha(TH,5);
+%  
+% If you want everything but the Americas:
+% 
+% TH.name='americas'; TH.parts{1}='namerica'; TH.parts{2}='samerica';   
+% [G,V]=vectanglmalpha(TH,5,[],1);
+%  
+%  
+% Last modified by plattner-at-alumni.ethz.ch, 06/29/2017
+
+
+
+
+
 
 L=max(L);
 defval('srt',1)
+defval('compl',0)
+
+% Have to check if struct is correctly set up
+if isstruct(TH)
+  if ~(ischar(TH.name)&iscell(TH.parts))
+    error('Something wrong with the struct you used for combining regions')
+    error('Need TH.name (string) and TH.parts (cell array)')
+  end
+end
+
 
 if ischar(TH)
   fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
-		 sprintf('vectanglmalpha-%s-%i-%i.mat',...
-			 TH,max(L),min(L)));  
+		 sprintf('vectanglmalpha-%s-%i-%i-%i.mat',...
+			 TH,max(L),min(L),compl));
+elseif isstruct(TH)
+  fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
+		 sprintf('vectanglmalpha-%s-%i-%i-%i.mat',...
+			 TH.name,max(L),min(L),compl));
 else
   fname=fullfile(getenv('IFILES'),'VECTANGLMALPHA',...
 		 sprintf('vectanglmalpha-%g-%g-%i-%i.mat',...
@@ -37,15 +76,39 @@ if exist(fname,'file')==2
     load(fname)
     disp(sprintf('Loading %s',fname))
 else
-  if ischar(TH)
-    try
-      K=kernelbp(L,TH);
-    catch
-      K=kernelb(L,TH);
-    end      
+
+  if isstruct(TH) | ischar(TH)
+  
+    if isstruct(TH)
+    % Several named regions. We will add them up.
+      K=sparse(2*(L+1)^2-2,2*(L+1)^2-2);
+      for reg=1:length(TH.parts)
+	try
+	  Kreg=kernelbp(L,TH.parts{reg});
+	catch
+	  Kreg=kernelb(L,TH.parts{reg});
+	end
+	  K=K+Kreg;
+      end
+    
+    elseif ischar(TH)
+      try
+	K=kernelbp(L,TH);
+      catch
+	K=kernelb(L,TH);
+      end
+    end
+
+    % No matter if many names or one name,
+    % we continue the same way once we set up K
+
+    if compl
+      K=speye(size(K))-K;
+    end
+    
     [G,V]=eig(K);
     V=diag(V);
-
+    
     %% G is addmon. Need to switch it to addmout
     [~,~,~,~,~,~,~,~,rinm]=addmon(L);
     GB=[nan(1,2*(L+1)^2-2) ;G(1:(L+1)^2-1,:)];
