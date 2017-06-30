@@ -84,8 +84,10 @@ else
       K=sparse(2*(L+1)^2-2,2*(L+1)^2-2);
       for reg=1:length(TH.parts)
 	try
+	  disp('Running parallel version of kernelb.m')
 	  Kreg=kernelbp(L,TH.parts{reg});
 	catch
+	  disp('Running serial version of kernelbp.m')
 	  Kreg=kernelb(L,TH.parts{reg});
 	end
 	  K=K+Kreg;
