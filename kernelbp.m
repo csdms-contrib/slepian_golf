@@ -73,7 +73,7 @@ function varargout=kernelbp(Lmax,dom,pars,method,rotb)
 % Last modified by plattner-at-alumni.ethz.ch, 06/29/2017
 % 
 % See also VECTORSLEPIAN, BLMCLM2XYZ, KERNELB, KERNELCP, KERNALTANCAPM
-
+  
 defval('Lmax',18)
 defval('dom','namerica')
 defval('method',200)
@@ -387,12 +387,9 @@ else
             
       % Rotate the kernels, properly. Why the transposed for D?                                       
       B=klmlmp2rot(B,lonc,latc);
-      D=klmlmp2rot(D',lonc,latc);          
+      D=klmlmp2rot(D',lonc,latc);
 
-      % For some odd reason we need to rotate them again by 0 degrees
-      % I think it has to do with some -1 factor somewhere
-      B=klmlmp2rot(B,0,0);      
-      D=klmlmp2rot(D,0,0);    
+   
 
     else
       [lonc,latc]=deal(0);

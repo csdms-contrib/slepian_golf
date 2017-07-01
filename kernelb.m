@@ -57,7 +57,6 @@ function varargout=kernelb(Lmax,dom,pars,method,rotb,nstripes)
 %  
 % Last modified by plattner-at-alumni.ethz.ch, 06/29/2017
 
-
 defval('Lmax',18)
 defval('dom','namerica')
 defval('method',200)
@@ -647,14 +646,9 @@ else
       D(:,1)=zeros(size(D,1),1);
       D(1,:)=zeros(1,size(D,2));
       
-      % Rotate the kernels
-      [B,B1]=klmlmp2rot(B,lonc,latc);
-      [D,D1]=klmlmp2rot(D,lonc,latc);
-
-      % For some odd reason we need to rotate them again by 0 degrees
-      % I think it has to do with some -1 factor somewhere
-      B=klmlmp2rot(B,0,0);      
-      D=klmlmp2rot(D,0,0);       
+      % Rotate the kernels. Why the transposed for D?  
+      B=klmlmp2rot(B,lonc,latc);
+      D=klmlmp2rot(D',lonc,latc);      
           
     else
       [lonc,latc]=deal(0);
