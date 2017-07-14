@@ -55,7 +55,7 @@ function varargout=kernelb(Lmax,dom,pars,method,rotb,nstripes)
 % On 06/29/2017, plattner-at-alumni.ethz.ch made
 % Antartica rotate back by default
 %  
-% Last modified by plattner-at-alumni.ethz.ch, 06/29/2017
+% Last modified by plattner-at-alumni.ethz.ch, 07/14/2017
 
 defval('Lmax',18)
 defval('dom','namerica')
@@ -71,7 +71,7 @@ if ~isstr(Lmax)
 % Generic path name that I like
 filoc=fullfile(getenv('IFILES'),'KERNELB');    
 
-if ~isstr(dom)
+if ~(isstr(dom) || length(dom)>2 )
     error('Use CAPVECTORSLEPIAN to calculate Slepians for a polar cap')
 else
 
@@ -90,7 +90,16 @@ else
                round(pars(3)*180/pi));
         % If the domain is a named region or a closed contour
     otherwise
-        fnpl=sprintf('%s/WREG-%s-%i-tang.mat',filoc,dom,Lmax);
+        if ischar(dom)
+	  h=dom;
+	else
+	  if exist('octave_config_info')
+	    h=builtin('hash','sha1',dom);
+	  else
+	    h=hash(dom,'sha1');
+	  end
+	end
+        fnpl=sprintf('%s/WREG-%s-%i-tang.mat',filoc,h,Lmax);
         % For some of the special regions it makes sense to distinguish
         % If it gets rotb=1 here, it doesn't in LOCALIZATION
         if strcmp(dom,'antarctica') && rotb==1 
@@ -140,6 +149,8 @@ else
                 % Don't, the result will be the kernel for the rotated dom                
                 XY=eval(sprintf('%s(%i)',dom,pars));
             end
+	else
+	  XY=dom;
         end
         thN=90-max(XY(:,2)); thN=thN*pi/180;
         thS=90-min(XY(:,2)); thS=thS*pi/180;

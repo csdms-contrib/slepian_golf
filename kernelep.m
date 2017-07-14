@@ -40,7 +40,7 @@ function KE=kernelep(Lmax,dom,pars,ngl,rotb)
 %
 % See also KERNELCP, KERNELBP, GRADVECGLMALPHA
 %
-% Last modified by plattner-at-alumni.ethz.ch, 2/7/2013
+% Last modified by plattner-at-alumni.ethz.ch, 7/14/2017
 
 defval('pars',[]);
 defval('ngl',200)
