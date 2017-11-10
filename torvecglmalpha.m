@@ -69,7 +69,7 @@ if exist(fname,'file')==2
     disp(sprintf('Loading %s',fname))
 else  
     try 
-        matlabpool open
+        parpool
     end
   
     % For GEOGRAPHICAL REGIONS or XY REGIONS

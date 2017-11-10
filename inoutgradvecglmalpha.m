@@ -58,9 +58,9 @@ if exist(fname,'file')==2
 else       
     % If possible, do parallel
     try 
-        matlabpool open
+        parpool
     %catch
-    %    disp('Matlabpool already open')
+    %    disp('Parpool already open')
     end
 
     % Find row indices into G belonging to the orders

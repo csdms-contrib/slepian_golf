@@ -46,7 +46,7 @@ H=out2on(H(:,1:J),L);
 %hh=waitbar(0,sprintf('Rotating the first %d Slepian functions',J));
 disp('Calculating rotations in parallel mode')
 try
-matlabpool open
+    parpool
 end
 parfor j=1:J  
     lmcosip=lmcosi;  
