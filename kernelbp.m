@@ -367,7 +367,7 @@ else
         end %parfor
             
         % Close the parpool
-        delete(gcp('nocreate'));
+        delete(gcp('nocreate'))
       
         % Symmetrize the Kernel
         B = B + B' - diag(diag(B));
