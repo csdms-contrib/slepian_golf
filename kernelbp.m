@@ -193,7 +193,7 @@ else
     if ~isstr(method) % GL with 'method' Gauss points       
         % See if we can run this calculation in parallel, and set a flag
         try
-            matlabpool open       
+            parpool      
         end
         
         intv=cos([thS thN]);
@@ -366,10 +366,8 @@ else
             D(lm1dex,:)=temprowD;
         end %parfor
             
-	% Close the matlabpool
-	try
-          matlabpool close
-	end
+	% Close the parpool
+  delete(gcp('nocreate'));
       
         % Symmetrize the Kernel
         B = B + B' - diag(diag(B));

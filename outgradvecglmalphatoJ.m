@@ -47,7 +47,7 @@ else
     %H=out2on(H(:,1:J),L);
     disp('Calculating rotations in parallel mode')
     try
-        matlabpool open
+        parpool
     end
     parfor j=1:J   
     %for j=1:J 
