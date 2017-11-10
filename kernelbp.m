@@ -366,7 +366,7 @@ else
             D(lm1dex,:)=temprowD;
         end %parfor
             
-	      % Close the parpool
+        % Close the parpool
         delete(gcp('nocreate'));
       
         % Symmetrize the Kernel
