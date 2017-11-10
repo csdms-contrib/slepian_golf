@@ -366,8 +366,8 @@ else
             D(lm1dex,:)=temprowD;
         end %parfor
             
-	% Close the parpool
-  delete(gcp('nocreate'));
+	  % Close the parpool
+    delete(gcp('nocreate'));
       
         % Symmetrize the Kernel
         B = B + B' - diag(diag(B));
