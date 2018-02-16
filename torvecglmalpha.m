@@ -1,13 +1,20 @@
-function varargout=torvecglmalpha(TH,L,srt)
+function varargout=torvecglmalpha(TH,L,srt,compl)
 % [G,V]=torvecglmalpha(TH,L,srt)
 %
 % Construction of toroidal Slepian functions from the Clm
 %
 % INPUT: 
 %
-% TH    Named region or polar cap opening angle
-% L     maximum spherical harmonic degree
-% srt   sorted output? [default = 1 (Yes)]
+% TH       polar cap opening angle
+%          OR two opening angles for ring
+%          OR named region
+%          OR, for several regions: struct with
+%             'TH.name' for name of the combined region
+%             'TH.parts' for the cell array of names of the parts, like
+%             for example TH.parts{1}='namerica', TH.parts{2}='samerica' 
+% L        maximum spherical harmonic degree
+% srt      sorted output? [default = 1 (Yes)]
+% compl    Do you want the complement of your named region?  [default = 0 = no] 
 %
 % OUTPUT:
 %
@@ -18,11 +25,21 @@ function varargout=torvecglmalpha(TH,L,srt)
 % Last modified by plattner-at-alumni.ethz.ch, 06/23/2016
 
 defval('srt',1)
+defval('compl',0)
 
 % Figure out if it's lowpass or bandpass
 lp=length(L)==1;
 bp=length(L)==2;
 maxL=max(L);
+
+
+% Have to check if struct is correctly set up
+if isstruct(TH)
+  if ~(ischar(TH.name)&iscell(TH.parts))
+    error('Something wrong with the struct you used for combining regions')
+    error('Need TH.name (string) and TH.parts (cell array)')
+  end
+end
 
 % The spherical harmonic dimension
 ldim=(L(2-lp)+1)^2-bp*L(1)^2;
@@ -32,7 +49,7 @@ if lp
 end
 
 % First check if already calculated. Make the name:
-if ~isstr(TH) && length(TH)==1 % POLAR CAPS  
+if ~isstr(TH) && ~isstruct(TH) &&  length(TH)==1 % POLAR CAPS  
     if lp
       fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
 		     sprintf('torvecglmalpha-%g-%i.mat',TH,L));
@@ -45,17 +62,19 @@ if ~isstr(TH) && length(TH)==1 % POLAR CAPS
    
 else % GEOGRAPHICAL REGIONS and XY REGIONS
     % This is in case we give the region as a list of lon lat coordinates
-    if isstr(TH) % Geographic (keep the string)
+    if ischar(TH) % Geographic (keep the string)
       h=TH;
+    elseif isstruct(TH)
+      h=TH.name;
     else % Coordinates (make a hash)
       h=hash(TH,'sha1');
     end
     if lp
       fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
-		     sprintf('torvecglmalpha-%s-%i.mat',h,L));
+		     sprintf('torvecglmalpha-%s-%i-compl%d.mat',h,L,compl));
     elseif bp
       fname=fullfile(getenv('IFILES'),'TORVECGLMALPHA',...
-		     sprintf('torvecglmalphabl-%s-%i-%i.mat',h,L(1),L(2)));
+		     sprintf('torvecglmalphabl-%s-%i-%i-compl%d.mat',h,L(1),L(2),compl));
     else
      error('The degree range is either one or two numbers')       
     end  
@@ -73,15 +92,34 @@ else
     end
   
     % For GEOGRAPHICAL REGIONS or XY REGIONS
-    if ischar(TH) || length(TH)>1
+    if ischar(TH) || isstruct(TH) || length(TH)>1
         if bp
             error('Bandpass geographical tapers are not ready yet')
         end
-        % Calculates the localization kernel for this domain
-        Klmlmp=kerneltorp(L,TH);
+	% Calculates the localization kernel for this domain
 
+	if isstruct(TH)
+	  % Several named regions. We will add them up.
+	  K=zeros((L+1)^2-1,(L+1)^2-1);
+	  for reg=1:length(TH.parts)
+	    Kreg=kerneltorp(L,TH.parts{reg});
+        try
+	    K=K+Kreg;
+        catch
+            keyboard
+        end
+        
+	  end
+	else
+          K=kerneltorp(L,TH);
+	end
+
+	if compl
+	  K=eye(size(K))-K;
+	end
+	
         % Calculate the eigenvectors / eigenvalues
-        [G,V]=eig(Klmlmp);
+        [G,V]=eig(K);
 
         % Sort eigenvectors for descending eigenvalues
         [V,isrt]=sort(sum(real(V),1));

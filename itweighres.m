@@ -16,7 +16,15 @@ for iter=1:niter
     % I think I can't get around having a second matrix and a second
     % data vector, because I don't want to keep multiplying them
     % Here the matrix      
-    Mp=M.*repmat(weights',size(M,1),1);                
+    Mp=M.*repmat(weights',size(M,1),1);   
+    % Instead of creating the large matrix and then multiplying,
+    % we will use a for loop. Matlab's JIT compilation will make it 
+    % better and it will save a lot of memory
+    %Mp=sparse(size(M,1),size(M,2));
+    %%%Mp=NaN(size(M));
+    %%%for i=1:size(M,1)        
+    %%%    Mp(i,:)=M(i,:).*(weights');        
+    %%%end
     % Here the right hand side
     datap=weights.*data;
 
