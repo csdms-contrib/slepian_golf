@@ -118,6 +118,10 @@ else
 	  K=eye(size(K))-K;
 	end
 	
+        % Symmetrize K to avoid complex numbers 
+        % (can happen even if norm(K-K')=1e-16)
+        K=0.5*(K+K');
+        
         % Calculate the eigenvectors / eigenvalues
         [G,V]=eig(K);
 
