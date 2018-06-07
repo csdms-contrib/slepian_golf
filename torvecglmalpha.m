@@ -103,11 +103,8 @@ else
 	  K=zeros((L+1)^2-1,(L+1)^2-1);
 	  for reg=1:length(TH.parts)
 	    Kreg=kerneltorp(L,TH.parts{reg});
-        try
+        
 	    K=K+Kreg;
-        catch
-            keyboard
-        end
         
 	  end
 	else
