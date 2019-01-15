@@ -31,6 +31,8 @@ function varargout=elm2xyz(elmcosi,degrees,c11cmn,lmax)
 %
 % Last modified by plattner-at-alumni.ethz.ch 02/24/2015
 
+warning('Using 4*pi-normalized real spherical harmonics')
+  
 defval('degrees',1)
 defval('c11cmn',[])
 defval('lmax',[])
