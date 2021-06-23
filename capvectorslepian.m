@@ -278,7 +278,7 @@ elseif strcmp(Lmax,'demo1')
     delete(ch);
     quivpolcaps(data{2})
     axis tight
-    if ~exist('octave_config_info')
+    try
       boxtex('ll',gca,sprintf('%s =%1.3f','\lambda',V(index)),15);
     end
     hold off   

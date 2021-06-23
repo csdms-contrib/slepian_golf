@@ -200,7 +200,7 @@ elseif strcmp(Lmax,'demo1')
         axis image
         set(ah(index),'FontSize',fozo-2)
         % Writing out the eigenvalues
-        if ~exist('octave_config_info')
+        try
             boxtex('ll',ah(index),sprintf('%s = %1.6f','\lambda',...
                 V(index)),fozo);   
         end

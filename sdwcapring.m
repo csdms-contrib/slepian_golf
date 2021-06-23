@@ -42,14 +42,13 @@ else
     % Now eigendecomposition
     [Cm,Vm]=eig(K);
     Vm=diag(Vm);
-    
-    % Now save
-    if exist('octave_config_info')
-    	% Octave
-    	save(fnpl,'Cm','Vm')
-    else
+
+    try
     	% Matlab
     	save(fnpl,'Cm','Vm','-v7.3')
+    catch
+    	% Octave
+    	save(fnpl,'Cm','Vm')      
     end
 
 end % End of calculation

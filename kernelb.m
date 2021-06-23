@@ -92,11 +92,11 @@ else
     otherwise
         if ischar(dom)
 	  h=dom;
-	else
-	  if exist('octave_config_info')
-	    h=builtin('hash','sha1',dom);
-	  else
+	else 
+	  try
 	    h=hash(dom,'sha1');
+    catch
+      h=builtin('hash','sha1',dom);
 	  end
 	end
         fnpl=sprintf('%s/WREG-%s-%i-tang.mat',filoc,h,Lmax);

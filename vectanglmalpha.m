@@ -120,12 +120,12 @@ else
     clear G;
     G=[GB(2:end,:);GC(2:end,:)];
 
-    if exist('octave_config_info')
-    	% Octave
-    	save(fname,'G','V')
-    else
+    try
     	% Matlab
     	save(fname,'G','V','-v7.3')
+    catch
+      % Octave
+    	save(fname,'G','V')
     end
     
   else
@@ -214,12 +214,12 @@ else
     
     G=[GB;GC];
     
-    if exist('octave_config_info')
-    	% Octave
-    	save(fname,'G','V')
-    else
+    try
     	% Matlab
     	save(fname,'G','V','-v7.3')
+    catch
+      % Octave
+    	save(fname,'G','V')
     end
   end % end of calculation for either named or ring or cap
     

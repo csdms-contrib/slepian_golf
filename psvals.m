@@ -51,7 +51,7 @@ for index=1:length(TH)
   set(ah(index),'xlim',[0 xmax],'ylim',yls,'xgrid','off','ygrid','off',...
 		'xticklabel',[1 10:20:xmax],'xtick',[1 10:20:xmax],...
 		'ytick',[0:0.25:1])
-  if ~exist('octave_config_info')  
+  try 
     [bh(index),th(index)]=boxtex('ur',ah(index),legsi{index},...
           12,[],[],[],0.8);
   end
@@ -76,7 +76,7 @@ for ondi=2:12
 end
 
 % Now make the plot beautiful
-if ~exist('octave_config_info')  
+try 
     movev(th,-.00)
 end
 longticks(ah)

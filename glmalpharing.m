@@ -58,13 +58,13 @@ else
         G(deM==m,alpha(2*m+1):alpha(2*m+2)-1)=Cm{m+1};
         V(alpha(2*m+1):alpha(2*m+2)-1)=Vm{m+1};
     end
-            
-    if exist('octave_config_info')
-    	% Octave
-    	save(fname,'G','V')
-    else
+           
+    try
     	% Matlab
     	save(fname,'G','V','-v7.3')
+    catch
+      % Octave
+    	save(fname,'G','V')
     end
     
 end

@@ -232,12 +232,12 @@ else
         G=G(:,isrt);
     end
         
-    if exist('octave_config_info')
-    	% Octave
-    	save(fname,'G','V')
-    else
+    try
     	% Matlab
     	save(fname,'G','V','-v7.3')
+    catch
+      % Octave
+    	save(fname,'G','V')
     end
     
       

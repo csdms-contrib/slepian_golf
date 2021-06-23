@@ -125,7 +125,7 @@ elseif strcmp(L,'demo1')
         imagefnan([-Llim,0],[Llim,Llim],coeffmatrix,[],[],[],1,100);
         hold on
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-	if ~exist('octave_config_info')
+	try
           boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
 	end
         hold off
@@ -161,7 +161,7 @@ elseif strcmp(L,'demo2')
         xlabel('m')
         ylabel('L')
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-	if ~exist('octave_config_info')
+  try
           boxtex('ll',ah(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
 	end
 	hold off
@@ -172,7 +172,7 @@ elseif strcmp(L,'demo2')
         xlabel('m')
         ylabel('L')
         plot([-Llim Llim],[L+0.5 L+0.5],'k')
-	if ~exist('octave_config_info')
+	try
           boxtex('ll',bh(index),sprintf('%s =%1.3f','\lambda',V(index)),5);
 	end
         hold off
@@ -224,7 +224,7 @@ elseif strcmp(L,'demo3')
     hold on    
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
-    if ~exist('octave_config_info')
+    try
       boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),12); 
       boxtex('ll',ah(4),sprintf('%s =%1.3f','\lambda',V(index)),12);
     end
@@ -307,7 +307,7 @@ elseif strcmp(L,'demo4')
     hold on    
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
-    if ~exist('octave_config_info')
+    try
       boxtex('ll',ah(1),sprintf('%s =%1.3f','\lambda',V(index)),7); 
       boxtex('ll',ah(5),sprintf('%s =%1.3f','\lambda',V(index)),7);      
       boxtex('ll',ah(6),sprintf('%s =%1.3f','\lambda',V(index)),7);
@@ -458,7 +458,7 @@ elseif strcmp(L,'demo5')
     plot([-Llim Llim],[L+0.5 L+0.5],'k')      
     hold off
     xlabel('order m','FontSize',fs)  
-    if ~exist('octave_config_info')
+    try
     [bhan, thhan]=boxtex('ll',ha(2),sprintf('%s','{V}_{lm} '),fs-2,[],1.2); 
     delete(bhan)
     [bhan, thhan]=boxtex('ll',ha(3),sprintf('%s','{W}_{lm} '),fs-2,[],1.2); 
@@ -471,7 +471,7 @@ elseif strcmp(L,'demo5')
     delete(bhan)
     end
     longticks(ha(6))
-    if ~exist('octave_config_info')
+    try
       boxtex('lr',ha(1),sprintf('%s =%1.3f','\lambda',V(index)),fs); 
       boxtex('lr',ha(5),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
       boxtex('lr',ha(6),sprintf('%s =%1.3f','\lambda',V(index)),fs);    
@@ -599,7 +599,7 @@ elseif strcmp(L,'demo6')
     hold off  
     xlabel('order m','FontSize',fs)
     longticks(ah(4))
-    if ~exist('octave_config_info')
+    try
     [bhan, thhan]=boxtex('ll',ha(2),sprintf('%s','{U}_{lm} '),fs-2,[],1.2); 
     delete(bhan)   
     [bhan, thhan]=boxtex('ll',ha(4),sprintf('%s','{U\prime}_{lm} '),...
