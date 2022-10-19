@@ -23,7 +23,7 @@ function varargout=flm(Lmax,theta,phi,irr)
 %
 % EXAMPLE: flm('demo1') to plot the rad and tan component of a single Flm
 %
-% Last modified by plattner-at-alumni.ethz.ch, 2/6/2013
+% Last modified by plattner-at-alumni.ethz.ch, 10/19/2022
 
 defval('irr',0)
 
@@ -32,7 +32,15 @@ if Lmax>1
     P=ylm([0 Lmax],[],theta,phi,[],[],[],irr);
     [B,~]=blmclm([1 Lmax],[],theta,phi,[],[],[],irr);
 else
-    error('Choose at least Lmax=2')
+    %error('Choose at least Lmax=2')
+    P=ylm([0 Lmax],[],theta,phi,[],[],[],irr);
+    [B,~]=blmclm([1 Lmax+1],[],theta,phi,[],[],[],irr);
+    B{1}=B{1}(1:3,:);
+    B{2}=B{2}(1:3,:);
+    % Alternative would be
+    % [B,~]=blmclm(1,[-1,0,1],theta,phi,[],[],[],irr);
+    % B{1} = B{1}'; B{2} = B{2}';
+    % I tested and the results are the same, as they should
 end
 
 

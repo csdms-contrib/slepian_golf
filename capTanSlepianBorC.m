@@ -7,7 +7,7 @@ function [GB,V]=capTanSlepianBorC(L,TH)
   % INPUT:
   %
   % L    maximum spherical-harmonic degree
-  % TH   spherical cap opening angle
+  % TH   spherical cap opening angle or two angles for ring
   %
   % OUTPUT:
   %

@@ -1,4 +1,4 @@
-function [slepcoef,dataweights,dampweights]=itweighres(M,data,slepcoef,niter,lambda,slepcoef0)
+function [slepcoef,dataweights,dampweights]=itweighres(M,data,slepcoef,niter,lambda,slepcoef0,rthresh,rthresh_s)
 % Iteratively reweighted residual solver based on 
 % Farquharson and Oldenburg (1998)
 %
