@@ -14,7 +14,7 @@ function varargout=flm(Lmax,theta,phi,irr)
 %
 % OUTPUT:
 % F         Gradient vector spherical harmonic evaluated at the n input 
-%           points
+%           points. Ordered in ADDMOUT.
 %           F{1}(lm,n) radial component
 %           F{2}(lm,n) theta component
 %           F{3}(lm,n) phi component
