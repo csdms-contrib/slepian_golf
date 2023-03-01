@@ -1,5 +1,5 @@
 function [G,V]=vectanglmalpha(TH,L,srt,compl)
-% [G,V]=vectanglmalpha(TH,L,srt)
+% [G,V]=vectanglmalpha(TH,L,srt,compl)
 %
 % Construction of tangent vector Slepian functions from the the Blm, and Clm
 % vector spherical harmonics for spherical caps
@@ -20,9 +20,8 @@ function [G,V]=vectanglmalpha(TH,L,srt,compl)
 % OUTPUT:
 %
 % G        Matrix containing the slepian coefficients for linear combinations
-%          of the Elm and Flm. The first (Lmax+1)^2 coefficients are for the
-%          Plm, the second (Lmax+1)^2-1 coefficients are for the Blm, and the
-%          last (Lmax+1)^2-1 coefficients are for the Clm.
+%          of the Blm and Clm. The first (Lmax+1)^2-1 coefficients are for the
+%          Blm, the second (Lmax+1)^2-1 coefficients are for the Clm.
 % V        concentration (eigen) values
 %
 % EXAMPLES:
