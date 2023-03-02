@@ -14,7 +14,7 @@ function varargout=elm(Lmax,theta,phi,irr)
 %
 % OUTPUT:
 % E         Gradient vector spherical harmonic evaluated at the n input 
-%           points
+%           points. Ordered in ADDMOUT
 %           E{1}(lm,n) radial component
 %           E{2}(lm,n) theta component
 %           E{3}(lm,n) phi component
