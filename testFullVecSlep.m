@@ -2,30 +2,32 @@ function testFullVecSlep(index)
 % Use this to test if glmalphaFullVec does everything correctly
 % Last modified by plattner-at-alumni.ethz.ch, 2023/3/2
 
-figshift = 1;%3;
-Lmax = 10;
+figshift = 0;%3;
+Lmax = 110;
 %dom = 'namerica';
-dom = 20;
-rotcoord = [];%[0,10];
-J=index;
-outoron = 1;
+dom = 10;
+rotcoord = [35,90];
+%rotcoord = [];
+J=100;
+onorout = 0; 
+
 
 deg = 1;
 
-[G,V] = glmalphaFullVec(Lmax,dom,1,rotcoord,J,outoron);
+[G,V] = glmalphaFullVec(Lmax,dom,1,rotcoord,J,onorout);
 
     % Evaluate Elm
     coefE = G(1:(Lmax+1)^2 ,index);
-    [valE,lon,lat]=elm2xyz(coef2lmcosi(coefE,outoron), deg);
+    [valE,lon,lat]=elm2xyz(coef2lmcosi(coefE,onorout), deg);
 
     % Evaluate Flm
     coefF = G((Lmax+1)^2+1:2*(Lmax+1)^2-1,index);
-    [valF,lon,lat]=flm2xyz(fcoef2flmcosi(coefF,outoron), deg);
+    [valF,lon,lat]=flm2xyz(fcoef2flmcosi(coefF,onorout), deg);
 
     % Evaluate Clm
     coefC = G(2*(Lmax+1)^2:end,index); 
     coefB = zeros(size(coefC));
-    [valC,lon,lat] = blmclm2xyz(fcoef2flmcosi(coefB,outoron), fcoef2flmcosi(coefC,outoron),deg);
+    [valC,lon,lat] = blmclm2xyz(fcoef2flmcosi(coefB,onorout), fcoef2flmcosi(coefC,onorout),deg);
 
     % Add them up
     radialEFC = valE{1} + valF{1};
@@ -66,7 +68,7 @@ clear G
 clear V
 
 
-    [G,V] = glmalphaFullVec(Lmax,dom,0,rotcoord,J,outoron);
+    [G,V] = glmalphaFullVec(Lmax,dom,0,rotcoord,J,onorout);
 
 
     
@@ -75,7 +77,7 @@ clear V
     figure(2+figshift)
 
     coefP = G(1:(Lmax+1)^2,index);
-    [radial,lon,lat] = plm2xyz(coef2lmcosi(coefP,outoron),deg);
+    [radial,lon,lat] = plm2xyz(coef2lmcosi(coefP,onorout),deg);
     subplot(3,1,1)
     imagesc(lon,lat,radial)
     title('radial component')
@@ -87,7 +89,7 @@ clear V
     % plot colatitudinal components
     coefB = G((Lmax+1)^2+1:2*(Lmax+1)^2-1,index);
     coefC = G(2*(Lmax+1)^2:end,index);
-    [tangential,lon,lat] = blmclm2xyz(fcoef2flmcosi(coefB,outoron), fcoef2flmcosi(coefC,outoron),deg);
+    [tangential,lon,lat] = blmclm2xyz(fcoef2flmcosi(coefB,onorout), fcoef2flmcosi(coefC,onorout),deg);
     subplot(3,1,2)
     imagesc(lon,lat,tangential(:,:,1))
     title('longitudinal component')
