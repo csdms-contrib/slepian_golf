@@ -9,7 +9,7 @@ function varargout=blmclm(l,m,theta,phi,check,tol,blox,irr)
 % l      degree(s) (1 <= l <= infinity) [default: random]
 % m      order (-l <= m <= l) [default: all orders -l:l]
 %        l and m can be vectors, but not both at the sane time
-%        if l is [0 L] and m is empty, do all degrees from 0 to L
+%        if l is [1 L] and m is empty, do all degrees from 0 to L
 %        if l is a single number and m is empty, it does m=0:l
 % theta  colatitude vector (0<=theta<=pi) [default: 181 linearly spaced; 
 %        not NaN!]
@@ -53,6 +53,7 @@ function varargout=blmclm(l,m,theta,phi,check,tol,blox,irr)
 % See also LIBBRECHT, PLM, XLM, BLMCLM2XYZ, YLM
 %
 % Last modified by plattner-at-alumni.ethz.ch, 07/31/2012
+% Small change in help text: 07/14/2023
 
 % Default values
 defval('l',round(rand*10))
